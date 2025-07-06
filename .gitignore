@@ -1,0 +1,11 @@
+# Nunca subir variáveis sensíveis
+.env
+
+# Nunca subir o JSON do Google (contém client_id e secret)
+client_secret.json
+
+# Pasta de cache do Python
+__pycache__/
+
+# Arquivos Python compilados
+*.pyc
