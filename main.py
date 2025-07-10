@@ -3,6 +3,7 @@ import threading
 import time
 import requests
 import json
+import traceback   # ✅ Importa traceback!
 from flask import Flask, jsonify
 from gmail_listener import GmailListener
 
@@ -40,10 +41,12 @@ def loop_checker(query, webhook_url, source):
                         print("⚠️ n8n respondeu com erro, não marcado como lido\n")
 
                 except Exception as e:
-                    print(f"❌ Erro ao enviar para n8n: {e}\n")
+                    print(f"❌ Erro ao enviar para n8n: {e}")
+                    traceback.print_exc()   # ✅ Mostra onde falhou
 
         except Exception as e:
             print(f"⚠️ Falha geral no loop: {e}")
+            traceback.print_exc()   # ✅ Mostra stack trace da falha
             print("⏳ Aguardando 30s antes de tentar de novo...")
             time.sleep(30)
 
@@ -53,6 +56,7 @@ def loop_checker(query, webhook_url, source):
 @app.route("/listen-emails", methods=["GET"])
 def listen_emails():
     return jsonify({"status": "running"})
+
 
 if __name__ == "__main__":
     threading.Thread(target=loop_checker, args=(QUERY_A, WEBHOOK_A, "shopify"), daemon=True).start()
